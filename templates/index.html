@@ -6,9 +6,17 @@
 <body>
     <h1>Sign Up for CalDining Notifications</h1>
     <form method="post">
+        <input type="hidden" name="subscribe" value="1">
         Email: <input type="email" name="email" required><br>
         Favorite Dishes (comma-separated): <input type="text" name="dishes" required><br>
         <input type="submit" value="Sign Up">
+    </form>
+
+    <h2>Unsubscribe</h2>
+    <form method="post">
+        <input type="hidden" name="unsubscribe" value="1">
+        Email: <input type="email" name="email" required><br>
+        <input type="submit" value="Unsubscribe">
     </form>
 </body>
 </html>
