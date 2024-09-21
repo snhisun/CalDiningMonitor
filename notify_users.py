@@ -1,7 +1,7 @@
 import os
 import pymongo
-import smtplib
-from email.mime.text import MIMEText
+from sendgrid import SendGridAPIClient
+from sendgrid.helpers.mail import Mail
 from datetime import datetime
 
 def notify_users():
@@ -53,9 +53,13 @@ def notify_users():
             send_email(email, matches, user['_id'])
 
 def send_email(to_email, matches, user_id):
-    EMAIL_ADDRESS = os.environ.get('EMAIL_ADDRESS')
-    EMAIL_PASSWORD = os.environ.get('EMAIL_PASSWORD')
+    SENDGRID_API_KEY = os.environ.get('SENDGRID_API_KEY')
     HEROKU_APP_NAME = os.environ.get('HEROKU_APP_NAME')
+    FROM_EMAIL = os.environ.get('FROM_EMAIL')  # Your verified sender email
+
+    if not SENDGRID_API_KEY or not FROM_EMAIL:
+        print("SendGrid API key or FROM_EMAIL not set.")
+        return
 
     # Email content
     subject = 'Your Favorite Dishes are Available Today!'
@@ -67,17 +71,19 @@ def send_email(to_email, matches, user_id):
     body += f'\nTo unsubscribe, click here: {unsubscribe_link}'
     body += '\n\nBest regards,\nCalDining Notifier'
 
-    msg = MIMEText(body)
-    msg['Subject'] = subject
-    msg['From'] = EMAIL_ADDRESS
-    msg['To'] = to_email
+    message = Mail(
+        from_email=FROM_EMAIL,
+        to_emails=to_email,
+        subject=subject,
+        plain_text_content=body
+    )
 
-    # Send the email
-    with smtplib.SMTP('smtp.gmail.com', 587) as server:
-        server.starttls()
-        server.login(EMAIL_ADDRESS, EMAIL_PASSWORD)
-        server.sendmail(EMAIL_ADDRESS, to_email, msg.as_string())
-        print(f"Email sent to {to_email}")
+    try:
+        sg = SendGridAPIClient(SENDGRID_API_KEY)
+        response = sg.send(message)
+        print(f"Email sent to {to_email} with status code {response.status_code}")
+    except Exception as e:
+        print(f"Error sending email to {to_email}: {e}")
 
 if __name__ == '__main__':
     notify_users()
