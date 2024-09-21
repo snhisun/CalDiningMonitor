@@ -5,11 +5,13 @@ charset-normalizer==3.3.2
 click==8.1.7
 dnspython==2.6.1
 Flask==3.0.3
+gunicorn==23.0.0
 idna==3.10
 importlib_metadata==8.5.0
 itsdangerous==2.2.0
 Jinja2==3.1.4
 MarkupSafe==2.1.5
+packaging==24.1
 pymongo==4.9.1
 requests==2.32.3
 schedule==1.2.2
