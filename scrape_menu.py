@@ -12,7 +12,7 @@ def scrape_menu():
     menu_collection = db['menu_items']
 
     # Scrape the CalDining website
-    url = 'https://dining.berkeley.edu/menus/'
+    url = 'https://caldining.berkeley.edu/menus/'
     response = requests.get(url)
     if response.status_code != 200:
         print('Failed to retrieve the menu page.')

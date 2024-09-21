@@ -63,7 +63,7 @@ def send_email(to_email, matches, user_id):
     for match in matches:
         body += f"{match['dish_name']} at {match['location']} during {match['times']}\n"
 
-    unsubscribe_link = f"https://{caldiningmonitor}.herokuapp.com/unsubscribe/{user_id}"
+    unsubscribe_link = f"https://{HEROKU_APP_NAME}.herokuapp.com/unsubscribe/{user_id}"
     body += f'\nTo unsubscribe, click here: {unsubscribe_link}'
     body += '\n\nBest regards,\nCalDining Notifier'
 
@@ -77,6 +77,7 @@ def send_email(to_email, matches, user_id):
         server.starttls()
         server.login(EMAIL_ADDRESS, EMAIL_PASSWORD)
         server.sendmail(EMAIL_ADDRESS, to_email, msg.as_string())
+        print(f"Email sent to {to_email}")
 
 if __name__ == '__main__':
     notify_users()
